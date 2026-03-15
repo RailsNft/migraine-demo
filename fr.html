@@ -3,545 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Système de Gestion des Migraines</title>
+<title>Suivi Migraines — Démo Gratuite | StudioBoubou</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
-<!-- Offline fallback: if Google Fonts fail, system serif/sans will be used -->
-<style>
-:root {
-  --bg: #0F0E13;
-  --surface: #16151C;
-  --surface2: #1E1C27;
-  --surface3: #262333;
-  --border: rgba(255,255,255,.06);
-  --border2: rgba(255,255,255,.1);
-  --text: #E8E4F0;
-  --text2: #9890B0;
-  --text3: #5A5468;
-  --accent: #7B5EA7;
-  --accent-soft: rgba(123,94,167,.15);
-  --accent-glow: rgba(123,94,167,.08);
-  --rose: #D0607A;
-  --rose-soft: rgba(208,96,122,.15);
-  --teal: #4EA8A0;
-  --teal-soft: rgba(78,168,160,.12);
-  --gold: #C4A24A;
-  --gold-soft: rgba(196,162,74,.12);
-  --green: #5AA87A;
-  --green-soft: rgba(90,168,122,.12);
-  /* Severity colors */
-  --s0: #4EA8A0;
-  --s1: #5AA87A;
-  --s2: #8ABB5A;
-  --s3: #C4C44A;
-  --s4: #C4A24A;
-  --s5: #C4804A;
-  --s6: #C45E4A;
-  --s7: #C44A5A;
-  --s8: #B03060;
-  --s9: #902050;
-  --s10: #6E1040;
-  --radius: 12px;
-  --radius-sm: 8px;
-}
-*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 14px;
-  line-height: 1.6;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-}
 
-/* ---- LAYOUT ---- */
-.app { display: flex; flex-direction: column; min-height: 100vh; max-width: 440px; margin: 0 auto; }
-
-/* ---- NAV ---- */
-.nav {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(15,14,19,.96);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  padding: 0 16px;
-}
-.nav-top {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 0 10px;
-}
-.nav-brand {
-  display: flex; align-items: center; gap: 10px;
-}
-.nav-brand .icon {
-  width: 32px; height: 32px; background: var(--accent-soft);
-  border-radius: 8px; display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-}
-.nav-brand h1 {
-  font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif;
-  font-size: 17px; font-weight: 400;
-  color: var(--text); letter-spacing: -.01em;
-}
-.nav-brand h1 em { font-style: italic; color: var(--text2); font-size: 13px; display: block; line-height: 1; }
-.btn-icon {
-  width: 36px; height: 36px; border-radius: 8px;
-  background: var(--surface2); border: 1px solid var(--border2);
-  color: var(--text2); font-size: 14px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: all .15s;
-}
-.btn-icon:hover { background: var(--surface3); color: var(--text); }
-
-.tabs {
-  display: flex; gap: 2px; padding-bottom: 12px;
-  overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none;
-}
-.tabs::-webkit-scrollbar { display: none; }
-.tab {
-  flex-shrink: 0; padding: 6px 14px; border-radius: 20px;
-  font-size: 12px; font-weight: 500; letter-spacing: .02em;
-  color: var(--text3); cursor: pointer;
-  border: 1px solid transparent; transition: all .15s;
-  background: transparent; white-space: nowrap;
-}
-.tab.active {
-  background: var(--accent-soft); color: var(--accent);
-  border-color: rgba(123,94,167,.3);
-}
-.tab:hover:not(.active) { color: var(--text2); background: var(--surface2); }
-
-/* ---- MAIN ---- */
-.main { flex: 1; padding: 20px 16px 100px; }
-
-/* ---- SECTIONS ---- */
-.section { display: none; }
-.section.active { display: block; }
-
-/* ---- CARDS ---- */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-bottom: 12px;
-}
-.card-title {
-  font-size: 10px; font-weight: 600; letter-spacing: .14em;
-  text-transform: uppercase; color: var(--text3); margin-bottom: 12px;
-  display: flex; align-items: center; gap: 8px;
-}
-.card-title .ct-dot { width: 6px; height: 6px; border-radius: 50%; }
-
-/* ---- TODAY HEADER ---- */
-.today-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 20px;
-}
-.today-date {
-  font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif;
-  font-size: 28px; color: var(--text); letter-spacing: -.02em;
-}
-.today-date em { font-style: italic; color: var(--text2); font-size: 20px; }
-.today-status {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 11px; color: var(--text3); font-weight: 500;
-}
-.status-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--teal);
-}
-
-/* ---- MIGRAINE TOGGLE ---- */
-.migraine-toggle {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 8px; margin-bottom: 8px;
-}
-.toggle-btn {
-  padding: 14px; border-radius: var(--radius-sm);
-  border: 2px solid var(--border2);
-  background: var(--surface2);
-  color: var(--text2); font-size: 13px; font-weight: 500;
-  cursor: pointer; text-align: center; transition: all .2s;
-}
-.toggle-btn.yes.active {
-  border-color: var(--rose); background: var(--rose-soft);
-  color: var(--rose);
-}
-.toggle-btn.no.active {
-  border-color: var(--teal); background: var(--teal-soft);
-  color: var(--teal);
-}
-.toggle-btn:hover:not(.active) { border-color: var(--border2); background: var(--surface3); }
-
-/* ---- SEVERITY SLIDER ---- */
-.sev-label {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 10px;
-}
-.sev-value {
-  font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif;
-  font-size: 32px; font-weight: 400;
-  transition: color .2s;
-}
-.sev-desc { font-size: 12px; color: var(--text2); }
-
-.sev-slider {
-  -webkit-appearance: none;
-  width: 100%; height: 6px;
-  background: var(--surface3);
-  border-radius: 3px; outline: none;
-  cursor: pointer; margin-bottom: 6px;
-}
-.sev-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 22px; height: 22px; border-radius: 50%;
-  background: var(--accent); cursor: pointer;
-  border: 3px solid var(--bg);
-  box-shadow: 0 0 0 1px var(--accent);
-  transition: transform .1s;
-}
-.sev-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
-.sev-marks {
-  display: flex; justify-content: space-between;
-  font-size: 9px; color: var(--text3);
-}
-
-/* ---- SIDE SELECTOR ---- */
-.side-selector { display: flex; gap: 6px; }
-.side-btn {
-  flex: 1; padding: 10px 6px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border2);
-  background: var(--surface2);
-  color: var(--text2); font-size: 12px; font-weight: 500;
-  cursor: pointer; text-align: center; transition: all .15s;
-}
-.side-btn.active {
-  border-color: var(--accent); background: var(--accent-soft); color: var(--accent);
-}
-
-/* ---- MINI FIELDS ---- */
-.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.field-group { display: flex; flex-direction: column; gap: 5px; }
-.field-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--text3); }
-.field-input {
-  background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: var(--radius-sm); padding: 10px 12px;
-  color: var(--text); font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 14px; width: 100%; outline: none;
-  transition: border-color .15s;
-}
-.field-input:focus { border-color: var(--accent); }
-.field-textarea {
-  background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: var(--radius-sm); padding: 10px 12px;
-  color: var(--text); font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 13px; width: 100%; outline: none;
-  min-height: 72px; resize: none;
-  transition: border-color .15s;
-}
-.field-textarea:focus { border-color: var(--accent); }
-.field-textarea::placeholder, .field-input::placeholder { color: var(--text3); }
-
-/* ---- STRESS / MOOD BUTTONS ---- */
-.rating-row { display: flex; gap: 6px; }
-.rating-btn {
-  flex: 1; padding: 10px 4px;
-  border-radius: 6px; border: 1px solid var(--border2);
-  background: var(--surface2); color: var(--text3);
-  font-size: 13px; font-weight: 600; cursor: pointer;
-  text-align: center; transition: all .15s;
-}
-.rating-btn.active-stress { border-color: var(--rose); background: var(--rose-soft); color: var(--rose); }
-.rating-btn.active-mood { border-color: var(--gold); background: var(--gold-soft); color: var(--gold); }
-
-/* ---- TRIGGERS ---- */
-.trigger-grid { display: flex; flex-wrap: wrap; gap: 6px; }
-.trigger-chip {
-  padding: 6px 12px; border-radius: 20px;
-  border: 1px solid var(--border2); background: var(--surface2);
-  font-size: 12px; color: var(--text2); cursor: pointer;
-  transition: all .15s; white-space: nowrap;
-}
-.trigger-chip.active {
-  border-color: var(--rose); background: var(--rose-soft); color: var(--rose);
-}
-
-/* ---- WATER TRACKER ---- */
-.water-row { display: flex; gap: 6px; flex-wrap: wrap; }
-.water-drop {
-  width: 38px; height: 38px; border-radius: 50%;
-  border: 2px solid var(--border2); background: var(--surface2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px; cursor: pointer; transition: all .2s;
-  opacity: .4;
-}
-.water-drop.filled { border-color: var(--teal); background: var(--teal-soft); opacity: 1; }
-
-/* ---- SAVE BUTTON ---- */
-.btn-primary {
-  width: 100%; padding: 15px;
-  background: var(--accent); border: none; border-radius: var(--radius);
-  color: #fff; font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 14px; font-weight: 600; letter-spacing: .02em;
-  cursor: pointer; transition: all .2s;
-}
-.btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
-.btn-primary:active { transform: translateY(0); }
-
-.btn-secondary {
-  padding: 10px 18px; border-radius: var(--radius-sm);
-  background: var(--surface2); border: 1px solid var(--border2);
-  color: var(--text2); font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 13px; font-weight: 500; cursor: pointer;
-  transition: all .15s;
-}
-.btn-secondary:hover { background: var(--surface3); color: var(--text); }
-
-/* ---- STATS ---- */
-.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.stat-card {
-  background: var(--surface2); border: 1px solid var(--border);
-  border-radius: var(--radius-sm); padding: 14px;
-}
-.stat-val {
-  font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif;
-  font-size: 28px; letter-spacing: -.02em; line-height: 1;
-  margin-bottom: 4px;
-}
-.stat-lbl { font-size: 11px; color: var(--text3); font-weight: 500; }
-
-/* ---- CALENDAR ---- */
-.cal-grid {
-  display: grid; grid-template-columns: repeat(7, 1fr);
-  gap: 3px; margin-top: 8px;
-}
-.cal-header {
-  font-size: 9px; font-weight: 600; letter-spacing: .1em;
-  text-transform: uppercase; color: var(--text3);
-  text-align: center; padding: 4px 0;
-}
-.cal-day {
-  aspect-ratio: 1; border-radius: 4px;
-  background: var(--surface2); border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; font-weight: 500; color: var(--text3);
-  cursor: pointer; transition: all .15s; position: relative;
-}
-.cal-day.has-data { color: var(--text); }
-.cal-day.today { border-color: var(--accent); }
-.cal-day.empty { background: transparent; border-color: transparent; cursor: default; }
-.cal-day .cal-dot {
-  position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
-  width: 4px; height: 4px; border-radius: 50%;
-}
-
-/* ---- HISTORY LIST ---- */
-.history-item {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 14px 16px;
-  margin-bottom: 8px; display: flex; align-items: center; gap: 14px;
-  cursor: pointer; transition: border-color .15s;
-}
-.history-item:hover { border-color: var(--border2); }
-.history-sev {
-  width: 42px; height: 42px; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif;
-  font-size: 20px; flex-shrink: 0;
-}
-.history-info { flex: 1; }
-.history-date { font-size: 13px; font-weight: 500; color: var(--text); }
-.history-meta { font-size: 11px; color: var(--text3); margin-top: 2px; }
-.history-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 5px; }
-.history-tag {
-  font-size: 10px; padding: 2px 8px; border-radius: 20px;
-  background: var(--surface2); color: var(--text3);
-}
-.history-tag.migraine { background: var(--rose-soft); color: var(--rose); }
-.history-tag.free { background: var(--teal-soft); color: var(--teal); }
-
-/* ---- CHART ---- */
-.chart-wrap { height: 100px; display: flex; align-items: flex-end; gap: 3px; padding: 4px 0; }
-.chart-bar-wrap { flex: 1; display: flex; align-items: flex-end; justify-content: center; }
-.chart-bar {
-  width: 100%; border-radius: 3px 3px 0 0;
-  min-height: 3px; transition: height .3s;
-}
-
-/* ---- MEDS ---- */
-.med-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 16px;
-  margin-bottom: 8px;
-}
-.med-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.med-name {
-  font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif;
-  font-size: 17px; color: var(--text); letter-spacing: -.01em;
-}
-.med-type-badge {
-  font-size: 9px; font-weight: 600; letter-spacing: .1em;
-  text-transform: uppercase; padding: 3px 9px; border-radius: 20px;
-}
-.med-type-badge.preventive { background: var(--accent-soft); color: var(--accent); }
-.med-type-badge.acute { background: var(--rose-soft); color: var(--rose); }
-.med-type-badge.rescue { background: var(--gold-soft); color: var(--gold); }
-.med-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-
-/* ---- DOCTOR PAGE ---- */
-.doctor-generated {
-  background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: var(--radius-sm); padding: 14px;
-  font-size: 13px; line-height: 1.8; color: var(--text);
-  white-space: pre-line; margin-bottom: 10px;
-}
-.doctor-stat-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 0; border-bottom: 1px solid var(--border);
-}
-.doctor-stat-row:last-child { border-bottom: none; }
-.doctor-stat-lbl { font-size: 12px; color: var(--text2); }
-.doctor-stat-val { font-size: 13px; font-weight: 600; color: var(--text); }
-
-/* ---- WELLNESS ---- */
-.well-tracker {
-  display: grid; grid-template-columns: repeat(7, 1fr);
-  gap: 2px; margin-top: 6px;
-}
-.well-cell {
-  aspect-ratio: 1; border-radius: 3px;
-  background: var(--surface2); border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 8px; font-weight: 600; color: var(--text3);
-}
-
-/* ---- EMERGENCY BANNER ---- */
-.emergency-banner {
-  background: var(--rose-soft); border: 1px solid rgba(208,96,122,.3);
-  border-radius: var(--radius); padding: 14px 16px;
-  margin-bottom: 12px; display: flex; align-items: center; gap: 12px;
-}
-.emergency-icon { font-size: 24px; }
-.emergency-text h3 { font-size: 13px; font-weight: 600; color: var(--rose); margin-bottom: 2px; }
-.emergency-text p { font-size: 11px; color: var(--text2); line-height: 1.5; }
-
-/* ---- RELIEF CHECKLIST ---- */
-.relief-list { display: flex; flex-direction: column; gap: 6px; }
-.relief-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px; border-radius: var(--radius-sm);
-  background: var(--surface2); border: 1px solid var(--border);
-  cursor: pointer; transition: all .15s;
-}
-.relief-item.done { border-color: var(--teal); background: var(--teal-soft); }
-.relief-item.done .relief-icon { filter: none; }
-.relief-check {
-  width: 18px; height: 18px; border-radius: 50%;
-  border: 1.5px solid var(--border2); flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  transition: all .15s;
-}
-.relief-item.done .relief-check {
-  background: var(--teal); border-color: var(--teal);
-  color: #fff; font-size: 11px;
-}
-.relief-text { font-size: 12px; color: var(--text2); flex: 1; }
-.relief-item.done .relief-text { color: var(--teal); }
-
-/* ---- SECTION DIVIDER ---- */
-.sec-divider {
-  font-size: 10px; font-weight: 600; letter-spacing: .14em;
-  text-transform: uppercase; color: var(--text3);
-  padding: 12px 0 8px;
-  display: flex; align-items: center; gap: 10px;
-}
-.sec-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-/* ---- SCROLL HINT ---- */
-.scroll-hint {
-  font-size: 10px; color: var(--text3); text-align: center;
-  padding: 8px 0; font-style: italic;
-}
-
-/* ---- TOAST ---- */
-.toast {
-  position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: var(--surface3); border: 1px solid var(--border2);
-  border-radius: 20px; padding: 10px 20px;
-  font-size: 13px; color: var(--text); font-weight: 500;
-  opacity: 0; transition: all .3s; pointer-events: none; z-index: 999; white-space: nowrap;
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* ---- BOTTOM NAV ---- */
-.bottom-nav {
-  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-  width: 100%; max-width: 440px;
-  background: rgba(15,14,19,.96); backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border);
-  display: flex; gap: 0; padding: 8px 0 20px;
-}
-.bnav-btn {
-  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
-  padding: 8px 4px; cursor: pointer; border: none; background: transparent;
-  color: var(--text3); transition: color .15s;
-}
-.bnav-btn.active { color: var(--accent); }
-.bnav-btn .bni { font-size: 20px; }
-.bnav-btn .bnl { font-size: 9px; font-weight: 500; letter-spacing: .06em; }
-
-/* ---- RESPONSIVE ---- */
-@media (min-width: 441px) {
-  .app { box-shadow: 0 0 80px rgba(0,0,0,.5); }
-}
-
-/* ---- TRANSITIONS ---- */
-.section { animation: fadeIn .2s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-/* ---- SEVERITY GRADIENT ---- */
-input[type=range].sev-slider {
-  background: linear-gradient(90deg,
-    var(--s0) 0%, var(--s2) 20%, var(--s4) 40%,
-    var(--s6) 60%, var(--s8) 80%, var(--s10) 100%);
-}
-
-/* ---- NOTES in Doctor section ---- */
-.note-line {
-  border-bottom: 1px solid var(--border2); min-height: 34px; margin-bottom: 2px;
-}
-
-.empty-state {
-  text-align: center; padding: 40px 20px;
-  color: var(--text3);
-}
-.empty-state .es-icon { font-size: 40px; margin-bottom: 12px; opacity: .4; }
-.empty-state h3 { font-size: 15px; color: var(--text2); margin-bottom: 6px; }
-.empty-state p { font-size: 12px; line-height: 1.6; }
-
-/* ---- DATA MENU ---- */
-.data-menu {
-  background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: var(--radius); padding: 6px;
-  margin: 0 16px 8px; animation: fadeIn .15s;
-}
-.data-menu-btn {
-  display: block; width: 100%; padding: 10px 12px;
-  background: transparent; border: none; border-radius: var(--radius-sm);
-  color: var(--text2); font-family: inherit; font-size: 13px;
-  text-align: left; cursor: pointer; transition: background .15s;
-}
-.data-menu-btn:hover { background: var(--surface3); color: var(--text); }
-
-/* ---- FOOTER BRANDING ---- */
-.footer-brand {
-  text-align: center; padding: 20px 0 8px;
-  font-size: 10px; color: var(--text3); letter-spacing: .08em;
-}
-
+<style>:root{--bg:#0F0E13;--surface:#16151C;--surface2:#1E1C27;--surface3:#262333;--border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.1);--text:#E8E4F0;--text2:#9890B0;--text3:#5A5468;--accent:#7B5EA7;--accent-soft:rgba(123,94,167,.15);--accent-glow:rgba(123,94,167,.08);--rose:#D0607A;--rose-soft:rgba(208,96,122,.15);--teal:#4EA8A0;--teal-soft:rgba(78,168,160,.12);--gold:#C4A24A;--gold-soft:rgba(196,162,74,.12);--green:#5AA87A;--green-soft:rgba(90,168,122,.12);--s0:#4EA8A0;--s1:#5AA87A;--s2:#8ABB5A;--s3:#C4C44A;--s4:#C4A24A;--s5:#C4804A;--s6:#C45E4A;--s7:#C44A5A;--s8:#B03060;--s9:#902050;--s10:#6E1040;--radius:12px;--radius-sm:8px;}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}body{background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased;}.app{display:flex;flex-direction:column;min-height:100vh;max-width:440px;margin:0 auto;}.nav{position:sticky;top:0;z-index:100;background:rgba(15,14,19,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 16px;}.nav-top{display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px;}.nav-brand{display:flex;align-items:center;gap:10px;}.nav-brand .icon{width:32px;height:32px;background:var(--accent-soft);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}.nav-brand h1{font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:17px;font-weight:400;color:var(--text);letter-spacing:-.01em;}.nav-brand h1 em{font-style:italic;color:var(--text2);font-size:13px;display:block;line-height:1;}.btn-icon{width:36px;height:36px;border-radius:8px;background:var(--surface2);border:1px solid var(--border2);color:var(--text2);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;}.btn-icon:hover{background:var(--surface3);color:var(--text);}.tabs{display:flex;gap:2px;padding-bottom:12px;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none;}.tabs::-webkit-scrollbar{display:none;}.tab{flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;letter-spacing:.02em;color:var(--text3);cursor:pointer;border:1px solid transparent;transition:all .15s;background:transparent;white-space:nowrap;}.tab.active{background:var(--accent-soft);color:var(--accent);border-color:rgba(123,94,167,.3);}.tab:hover:not(.active){color:var(--text2);background:var(--surface2);}.main{flex:1;padding:20px 16px 100px;}.section{display:none;}.section.active{display:block;}.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;}.card-title{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;display:flex;align-items:center;gap:8px;}.card-title .ct-dot{width:6px;height:6px;border-radius:50%;}.today-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}.today-date{font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:28px;color:var(--text);letter-spacing:-.02em;}.today-date em{font-style:italic;color:var(--text2);font-size:20px;}.today-status{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3);font-weight:500;}.status-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);}.migraine-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}.toggle-btn{padding:14px;border-radius:var(--radius-sm);border:2px solid var(--border2);background:var(--surface2);color:var(--text2);font-size:13px;font-weight:500;cursor:pointer;text-align:center;transition:all .2s;}.toggle-btn.yes.active{border-color:var(--rose);background:var(--rose-soft);color:var(--rose);}.toggle-btn.no.active{border-color:var(--teal);background:var(--teal-soft);color:var(--teal);}.toggle-btn:hover:not(.active){border-color:var(--border2);background:var(--surface3);}.sev-label{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}.sev-value{font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:32px;font-weight:400;transition:color .2s;}.sev-desc{font-size:12px;color:var(--text2);}.sev-slider{-webkit-appearance:none;width:100%;height:6px;background:var(--surface3);border-radius:3px;outline:none;cursor:pointer;margin-bottom:6px;}.sev-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;border:3px solid var(--bg);box-shadow:0 0 0 1px var(--accent);transition:transform .1s;}.sev-slider::-webkit-slider-thumb:hover{transform:scale(1.15);}.sev-marks{display:flex;justify-content:space-between;font-size:9px;color:var(--text3);}.side-selector{display:flex;gap:6px;}.side-btn{flex:1;padding:10px 6px;border-radius:var(--radius-sm);border:1px solid var(--border2);background:var(--surface2);color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;text-align:center;transition:all .15s;}.side-btn.active{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);}.field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}.field-group{display:flex;flex-direction:column;gap:5px;}.field-label{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);}.field-input{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 12px;color:var(--text);font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;width:100%;outline:none;transition:border-color .15s;}.field-input:focus{border-color:var(--accent);}.field-textarea{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 12px;color:var(--text);font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;width:100%;outline:none;min-height:72px;resize:none;transition:border-color .15s;}.field-textarea:focus{border-color:var(--accent);}.field-textarea::placeholder,.field-input::placeholder{color:var(--text3);}.rating-row{display:flex;gap:6px;}.rating-btn{flex:1;padding:10px 4px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);color:var(--text3);font-size:13px;font-weight:600;cursor:pointer;text-align:center;transition:all .15s;}.rating-btn.active-stress{border-color:var(--rose);background:var(--rose-soft);color:var(--rose);}.rating-btn.active-mood{border-color:var(--gold);background:var(--gold-soft);color:var(--gold);}.trigger-grid{display:flex;flex-wrap:wrap;gap:6px;}.trigger-chip{padding:6px 12px;border-radius:20px;border:1px solid var(--border2);background:var(--surface2);font-size:12px;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}.trigger-chip.active{border-color:var(--rose);background:var(--rose-soft);color:var(--rose);}.water-row{display:flex;gap:6px;flex-wrap:wrap;}.water-drop{width:38px;height:38px;border-radius:50%;border:2px solid var(--border2);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .2s;opacity:.4;}.water-drop.filled{border-color:var(--teal);background:var(--teal-soft);opacity:1;}.btn-primary{width:100%;padding:15px;background:var(--accent);border:none;border-radius:var(--radius);color:#fff;font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;font-weight:600;letter-spacing:.02em;cursor:pointer;transition:all .2s;}.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px);}.btn-primary:active{transform:translateY(0);}.btn-secondary{padding:10px 18px;border-radius:var(--radius-sm);background:var(--surface2);border:1px solid var(--border2);color:var(--text2);font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;}.btn-secondary:hover{background:var(--surface3);color:var(--text);}.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}.stat-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;}.stat-val{font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:28px;letter-spacing:-.02em;line-height:1;margin-bottom:4px;}.stat-lbl{font-size:11px;color:var(--text3);font-weight:500;}.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:8px;}.cal-header{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);text-align:center;padding:4px 0;}.cal-day{aspect-ratio:1;border-radius:4px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:var(--text3);cursor:pointer;transition:all .15s;position:relative;}.cal-day.has-data{color:var(--text);}.cal-day.today{border-color:var(--accent);}.cal-day.empty{background:transparent;border-color:transparent;cursor:default;}.cal-day .cal-dot{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;}.history-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .15s;}.history-item:hover{border-color:var(--border2);}.history-sev{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:20px;flex-shrink:0;}.history-info{flex:1;}.history-date{font-size:13px;font-weight:500;color:var(--text);}.history-meta{font-size:11px;color:var(--text3);margin-top:2px;}.history-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}.history-tag{font-size:10px;padding:2px 8px;border-radius:20px;background:var(--surface2);color:var(--text3);}.history-tag.migraine{background:var(--rose-soft);color:var(--rose);}.history-tag.free{background:var(--teal-soft);color:var(--teal);}.chart-wrap{height:100px;display:flex;align-items:flex-end;gap:3px;padding:4px 0;}.chart-bar-wrap{flex:1;display:flex;align-items:flex-end;justify-content:center;}.chart-bar{width:100%;border-radius:3px 3px 0 0;min-height:3px;transition:height .3s;}.med-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:8px;}.med-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}.med-name{font-family:'DM Serif Display',Georgia,'Times New Roman',serif;font-size:17px;color:var(--text);letter-spacing:-.01em;}.med-type-badge{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:20px;}.med-type-badge.preventive{background:var(--accent-soft);color:var(--accent);}.med-type-badge.acute{background:var(--rose-soft);color:var(--rose);}.med-type-badge.rescue{background:var(--gold-soft);color:var(--gold);}.med-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;}.doctor-generated{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:14px;font-size:13px;line-height:1.8;color:var(--text);white-space:pre-line;margin-bottom:10px;}.doctor-stat-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);}.doctor-stat-row:last-child{border-bottom:none;}.doctor-stat-lbl{font-size:12px;color:var(--text2);}.doctor-stat-val{font-size:13px;font-weight:600;color:var(--text);}.well-tracker{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:6px;}.well-cell{aspect-ratio:1;border-radius:3px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:var(--text3);}.emergency-banner{background:var(--rose-soft);border:1px solid rgba(208,96,122,.3);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;}.emergency-icon{font-size:24px;}.emergency-text h3{font-size:13px;font-weight:600;color:var(--rose);margin-bottom:2px;}.emergency-text p{font-size:11px;color:var(--text2);line-height:1.5;}.relief-list{display:flex;flex-direction:column;gap:6px;}.relief-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);background:var(--surface2);border:1px solid var(--border);cursor:pointer;transition:all .15s;}.relief-item.done{border-color:var(--teal);background:var(--teal-soft);}.relief-item.done .relief-icon{filter:none;}.relief-check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}.relief-item.done .relief-check{background:var(--teal);border-color:var(--teal);color:#fff;font-size:11px;}.relief-text{font-size:12px;color:var(--text2);flex:1;}.relief-item.done .relief-text{color:var(--teal);}.sec-divider{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);padding:12px 0 8px;display:flex;align-items:center;gap:10px;}.sec-divider::after{content:'';flex:1;height:1px;background:var(--border);}.scroll-hint{font-size:10px;color:var(--text3);text-align:center;padding:8px 0;font-style:italic;}.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface3);border:1px solid var(--border2);border-radius:20px;padding:10px 20px;font-size:13px;color:var(--text);font-weight:500;opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap;}.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:440px;background:rgba(15,14,19,.96);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;gap:0;padding:8px 0 20px;}.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;cursor:pointer;border:none;background:transparent;color:var(--text3);transition:color .15s;}.bnav-btn.active{color:var(--accent);}.bnav-btn .bni{font-size:20px;}.bnav-btn .bnl{font-size:9px;font-weight:500;letter-spacing:.06em;}@media (min-width:441px){.app{box-shadow:0 0 80px rgba(0,0,0,.5);}}.section{animation:fadeIn .2s ease;}@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}input[type=range].sev-slider{background:linear-gradient(90deg,var(--s0) 0%,var(--s2) 20%,var(--s4) 40%,var(--s6) 60%,var(--s8) 80%,var(--s10) 100%);}.note-line{border-bottom:1px solid var(--border2);min-height:34px;margin-bottom:2px;}.empty-state{text-align:center;padding:40px 20px;color:var(--text3);}.empty-state .es-icon{font-size:40px;margin-bottom:12px;opacity:.4;}.empty-state h3{font-size:15px;color:var(--text2);margin-bottom:6px;}.empty-state p{font-size:12px;line-height:1.6;}.data-menu{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:6px;margin:0 16px 8px;animation:fadeIn .15s;}.data-menu-btn{display:block;width:100%;padding:10px 12px;background:transparent;border:none;border-radius:var(--radius-sm);color:var(--text2);font-family:inherit;font-size:13px;text-align:left;cursor:pointer;transition:background .15s;}.data-menu-btn:hover{background:var(--surface3);color:var(--text);}.footer-brand{text-align:center;padding:20px 0 8px;font-size:10px;color:var(--text3);letter-spacing:.08em;}
 /* DEMO BANNER */
 #demo-banner {
   position: fixed; bottom: 0; left: 0; right: 0; z-index: 99999;
@@ -566,13 +32,11 @@ input[type=range].sev-slider {
 }
 #demo-banner .close-btn:hover { color: #fff; }
 body { padding-bottom: 52px !important; }
-
 </style>
 </head>
 <body>
 <div class="app">
 
-<!-- NAV -->
 <nav class="nav">
   <div class="nav-top">
     <div class="nav-brand">
@@ -593,7 +57,7 @@ body { padding-bottom: 52px !important; }
     <div class="tab" data-tab="doctor">Médecin</div>
     <div class="tab" data-tab="wellness">Bien-être</div>
   </div>
-  <!-- Data menu -->
+  
   <div class="data-menu" id="dataMenu" style="display:none">
     <button class="data-menu-btn" onclick="exportData()">📤 Exporter mes données (sauvegarde)</button>
     <button class="data-menu-btn" onclick="importData()">📥 Importer des données (restaurer)</button>
@@ -603,7 +67,6 @@ body { padding-bottom: 52px !important; }
 
 <main class="main">
 
-<!-- ===== TODAY ===== -->
 <section class="section active" id="sec-today">
   <div class="today-header">
     <div>
@@ -615,7 +78,7 @@ body { padding-bottom: 52px !important; }
     </div>
   </div>
 
-  <!-- Emergency relief (shows when migraine = yes) -->
+  
   <div class="emergency-banner" id="emergencyBanner" style="display:none">
     <div class="emergency-icon">⚡</div>
     <div class="emergency-text">
@@ -624,7 +87,7 @@ body { padding-bottom: 52px !important; }
     </div>
   </div>
 
-  <!-- Migraine Y/N -->
+  
   <div class="card">
     <div class="card-title"><span class="ct-dot" style="background:var(--rose)"></span>Migraine aujourd'hui ?</div>
     <div class="migraine-toggle">
@@ -633,7 +96,7 @@ body { padding-bottom: 52px !important; }
     </div>
   </div>
 
-  <!-- Severity (only when migraine) -->
+  
   <div class="card" id="severityCard" style="display:none">
     <div class="card-title"><span class="ct-dot" style="background:var(--accent)"></span>Intensité de la douleur</div>
     <div class="sev-label">
@@ -653,7 +116,7 @@ body { padding-bottom: 52px !important; }
     </div>
   </div>
 
-  <!-- Duration & Meds -->
+  
   <div class="card" id="durationCard" style="display:none">
     <div class="card-title"><span class="ct-dot" style="background:var(--gold)"></span>Durée et médicament</div>
     <div class="field-row">
@@ -675,7 +138,7 @@ body { padding-bottom: 52px !important; }
     </div>
   </div>
 
-  <!-- Triggers -->
+  
   <div class="card" id="triggersCard">
     <div class="card-title"><span class="ct-dot" style="background:var(--rose)"></span>Déclencheurs</div>
     <div class="trigger-grid">
@@ -696,7 +159,7 @@ body { padding-bottom: 52px !important; }
     </div>
   </div>
 
-  <!-- Sleep, Water, Stress, Mood -->
+  
   <div class="card">
     <div class="card-title"><span class="ct-dot" style="background:var(--teal)"></span>Sommeil et hydratation</div>
     <div class="field-row" style="margin-bottom:12px">
@@ -719,13 +182,13 @@ body { padding-bottom: 52px !important; }
     </div>
   </div>
 
-  <!-- Notes -->
+  
   <div class="card">
     <div class="card-title"><span class="ct-dot" style="background:var(--text3)"></span>Notes</div>
     <textarea class="field-textarea" id="notes" placeholder="Observations, ce que vous avez mangé, événements inhabituels…"></textarea>
   </div>
 
-  <!-- Relief checklist (shows when migraine) -->
+  
   <div id="reliefSection" style="display:none">
     <div class="sec-divider">Liste de soulagement</div>
     <div class="relief-list" id="reliefList"></div>
@@ -734,27 +197,25 @@ body { padding-bottom: 52px !important; }
   <button class="btn-primary" onclick="saveToday()" style="margin-top:12px">💾 Enregistrer le journal du jour</button>
 </section>
 
-<!-- ===== HISTORY ===== -->
 <section class="section" id="sec-history">
   <div class="sec-divider" style="padding-top:0">Entrées récentes</div>
   <div id="historyList"></div>
 </section>
 
-<!-- ===== CALENDAR ===== -->
 <section class="section" id="sec-calendar">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
     <button class="btn-secondary" onclick="changeMonth(-1)">‹</button>
     <div style="font-family:'DM Serif Display',serif;font-size:20px" id="calMonthTitle">Mois</div>
     <button class="btn-secondary" onclick="changeMonth(1)">›</button>
   </div>
-  <!-- Month stats row -->
+  
   <div class="stat-grid" style="margin-bottom:12px" id="calMonthStats"></div>
-  <!-- Calendar grid -->
+  
   <div class="card" style="padding:12px">
     <div class="cal-grid" id="calHeaders"></div>
     <div class="cal-grid" id="calGrid" style="margin-top:4px"></div>
   </div>
-  <!-- Legend -->
+  
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
     <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:2px;background:var(--teal)"></div>Sans migraine</div>
     <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3)"><div style="width:10px;height:10px;border-radius:2px;background:var(--s5)"></div>Modéré</div>
@@ -762,7 +223,6 @@ body { padding-bottom: 52px !important; }
   </div>
 </section>
 
-<!-- ===== STATS ===== -->
 <section class="section" id="sec-stats">
   <div class="sec-divider" style="padding-top:0">Vue d'ensemble — tout</div>
   <div class="stat-grid" id="statsGrid"></div>
@@ -789,14 +249,12 @@ body { padding-bottom: 52px !important; }
   </div>
 </section>
 
-<!-- ===== MEDS ===== -->
 <section class="section" id="sec-meds">
   <div class="sec-divider" style="padding-top:0">Suivi des médicaments</div>
   <div id="medsList"></div>
   <button class="btn-secondary" onclick="addMed()" style="width:100%;margin-top:4px">+ Ajouter un médicament</button>
 </section>
 
-<!-- ===== DOCTOR ===== -->
 <section class="section" id="sec-doctor">
   <div class="sec-divider" style="padding-top:0">Préparation RDV — auto-généré</div>
   <div class="card">
@@ -829,7 +287,6 @@ body { padding-bottom: 52px !important; }
   <button class="btn-primary" onclick="printDoctorSummary()" style="margin-top:4px">🖨 Imprimer le résumé pour le médecin</button>
 </section>
 
-<!-- ===== WELLNESS ===== -->
 <section class="section" id="sec-wellness">
   <div class="sec-divider" style="padding-top:0">Plan repas de la semaine</div>
   <div class="card">
@@ -889,10 +346,8 @@ body { padding-bottom: 52px !important; }
 
 <div class="footer-brand">StudioBoubou — Système de Gestion des Migraines</div>
 
-<!-- TOAST -->
 <div class="toast" id="toast">Enregistré</div>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <button class="bnav-btn active" onclick="switchTab('today')" id="bnav-today"><span class="bni">📝</span><span class="bnl">Aujourd'hui</span></button>
   <button class="bnav-btn" onclick="switchTab('calendar')" id="bnav-calendar"><span class="bni">📅</span><span class="bnl">Calendrier</span></button>
@@ -902,642 +357,511 @@ body { padding-bottom: 52px !important; }
 </nav>
 </div>
 
-<script>
-// ============ DATA LAYER ============
-const DB = {
-  get: (k, def=null) => {
-    try { const v = localStorage.getItem('mg_'+k); return v ? JSON.parse(v) : def; } catch { return def; }
-  },
-  set: (k, v) => { try { localStorage.setItem('mg_'+k, JSON.stringify(v)); } catch {} },
+<script>const DB = {
+get: (k, def=null) => {
+try { const v = localStorage.getItem('mg_'+k); return v ? JSON.parse(v) : def; } catch { return def; }
+},
+set: (k, v) => { try { localStorage.setItem('mg_'+k, JSON.stringify(v)); } catch {} },
 };
-
-// today's key
 const todayKey = () => {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const d = new Date();
+return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 };
-
-// State
 let state = {
-  migraine: null, severity: 0, side: null, relief: null,
-  duration: 0, meds: '', triggers: [],
-  sleep: '', water: 0, stress: 0, mood: 0, notes: '',
+migraine: null, severity: 0, side: null, relief: null,
+duration: 0, meds: '', triggers: [],
+sleep: '', water: 0, stress: 0, mood: 0, notes: '',
 };
-
 const sevDescs = ['Aucune douleur','Minimale','Légère','Inconfortable','Modérée','Perturbante',
-                   'Pénible','Intense','Sévère','Atroce','Insupportable'];
-
+'Pénible','Intense','Sévère','Atroce','Insupportable'];
 const sevColors = ['#4EA8A0','#5AA87A','#8ABB5A','#C4C44A','#C4A24A','#C4804A','#C45E4A','#C44A5A','#B03060','#902050','#6E1040'];
-
-// ============ INIT ============
 document.addEventListener('DOMContentLoaded', () => {
-  initToday();
-  initWaterDrops();
-  initRatingRows();
-  initCalendar();
-  initStats();
-  initMeds();
-  initDoctorPage();
-  initMealPlan();
-
-  // Check if today already logged
-  const saved = DB.get('day_'+todayKey());
-  if (saved) loadFromSaved(saved);
+initToday();
+initWaterDrops();
+initRatingRows();
+initCalendar();
+initStats();
+initMeds();
+initDoctorPage();
+initMealPlan();
+const saved = DB.get('day_'+todayKey());
+if (saved) loadFromSaved(saved);
 });
-
-// ============ TODAY ============
 function initToday() {
-  const d = new Date();
-  const days = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
-  const months = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
-  document.getElementById('todayDate').innerHTML =
-    `${days[d.getDay()]}<em>, ${d.getDate()} ${months[d.getMonth()]}</em>`;
+const d = new Date();
+const days = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+const months = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+document.getElementById('todayDate').innerHTML =
+`${days[d.getDay()]}<em>, ${d.getDate()} ${months[d.getMonth()]}</em>`;
 }
-
 function setMigraine(val) {
-  state.migraine = val;
-  document.getElementById('btnYes').classList.toggle('active', val);
-  document.getElementById('btnNo').classList.toggle('active', !val);
-  document.getElementById('severityCard').style.display = val ? 'block' : 'none';
-  document.getElementById('durationCard').style.display = val ? 'block' : 'none';
-  document.getElementById('emergencyBanner').style.display = val ? 'flex' : 'none';
-  document.getElementById('reliefSection').style.display = val ? 'block' : 'none';
-  if (val && !document.getElementById('reliefList').children.length) initRelief();
-  updateStatus();
+state.migraine = val;
+document.getElementById('btnYes').classList.toggle('active', val);
+document.getElementById('btnNo').classList.toggle('active', !val);
+document.getElementById('severityCard').style.display = val ? 'block' : 'none';
+document.getElementById('durationCard').style.display = val ? 'block' : 'none';
+document.getElementById('emergencyBanner').style.display = val ? 'flex' : 'none';
+document.getElementById('reliefSection').style.display = val ? 'block' : 'none';
+if (val && !document.getElementById('reliefList').children.length) initRelief();
+updateStatus();
 }
-
 function updateSeverity(val) {
-  state.severity = parseInt(val);
-  document.getElementById('sevValue').textContent = val;
-  document.getElementById('sevDesc').textContent = sevDescs[val];
-  document.getElementById('sevValue').style.color = sevColors[val];
+state.severity = parseInt(val);
+document.getElementById('sevValue').textContent = val;
+document.getElementById('sevDesc').textContent = sevDescs[val];
+document.getElementById('sevValue').style.color = sevColors[val];
 }
-
 function setSide(s) {
-  state.side = s;
-  ['L','R','Both'].forEach(x => document.getElementById('side'+x).classList.toggle('active', x===s));
+state.side = s;
+['L','R','Both'].forEach(x => document.getElementById('side'+x).classList.toggle('active', x===s));
 }
-
 function setRelief(val) {
-  state.relief = val;
-  document.getElementById('reliefY').classList.toggle('active', val);
-  document.getElementById('reliefN').classList.toggle('active', !val);
+state.relief = val;
+document.getElementById('reliefY').classList.toggle('active', val);
+document.getElementById('reliefN').classList.toggle('active', !val);
 }
-
 function toggleTrigger(el, name) {
-  el.classList.toggle('active');
-  if (el.classList.contains('active')) {
-    if (!state.triggers.includes(name)) state.triggers.push(name);
-  } else {
-    state.triggers = state.triggers.filter(t => t !== name);
-  }
+el.classList.toggle('active');
+if (el.classList.contains('active')) {
+if (!state.triggers.includes(name)) state.triggers.push(name);
+} else {
+state.triggers = state.triggers.filter(t => t !== name);
 }
-
+}
 function initWaterDrops() {
-  const c = document.getElementById('waterDrops');
-  for (let i=1;i<=8;i++) {
-    const d = document.createElement('div');
-    d.className = 'water-drop'; d.textContent = '💧'; d.dataset.n = i;
-    d.onclick = () => {
-      const n = parseInt(d.dataset.n);
-      state.water = state.water === n ? n-1 : n;
-      updateWater();
-    };
-    c.appendChild(d);
-  }
+const c = document.getElementById('waterDrops');
+for (let i=1;i<=8;i++) {
+const d = document.createElement('div');
+d.className = 'water-drop'; d.textContent = '💧'; d.dataset.n = i;
+d.onclick = () => {
+const n = parseInt(d.dataset.n);
+state.water = state.water === n ? n-1 : n;
+updateWater();
+};
+c.appendChild(d);
 }
-
+}
 function updateWater() {
-  document.querySelectorAll('.water-drop').forEach(d => {
-    d.classList.toggle('filled', parseInt(d.dataset.n) <= state.water);
-  });
+document.querySelectorAll('.water-drop').forEach(d => {
+d.classList.toggle('filled', parseInt(d.dataset.n) <= state.water);
+});
 }
-
 function initRatingRows() {
-  const moods = ['😣','😟','😐','🙂','😊'];
-  const stresses = ['😌','🤔','😬','😰','🤯'];
-  const exInts = ['🚶','🏃','⚡','🔥','💥'];
-  buildRating('stressRow', stresses, 'stress');
-  buildRating('moodRow', moods, 'mood');
-  buildRating('exIntensity', exInts, 'ex', true);
+const moods = ['😣','😟','😐','🙂','😊'];
+const stresses = ['😌','🤔','😬','😰','🤯'];
+const exInts = ['🚶','🏃','⚡','🔥','💥'];
+buildRating('stressRow', stresses, 'stress');
+buildRating('moodRow', moods, 'mood');
+buildRating('exIntensity', exInts, 'ex', true);
 }
-
 function buildRating(id, icons, key, external=false) {
-  const c = document.getElementById(id);
-  if (!c) return;
-  icons.forEach((icon, i) => {
-    const b = document.createElement('button');
-    b.className = 'rating-btn'; b.textContent = icon; b.dataset.val = i+1;
-    b.onclick = () => {
-      if (!external) state[key] = i+1;
-      c.querySelectorAll('.rating-btn').forEach(x => x.classList.remove('active-stress','active-mood'));
-      c.querySelectorAll('.rating-btn').forEach(x => x.classList.toggle('active-stress', parseInt(x.dataset.val) <= i+1 && key==='stress'));
-      c.querySelectorAll('.rating-btn').forEach(x => x.classList.toggle('active-mood', parseInt(x.dataset.val) <= i+1 && key!=='stress'));
-    };
-    c.appendChild(b);
-  });
+const c = document.getElementById(id);
+if (!c) return;
+icons.forEach((icon, i) => {
+const b = document.createElement('button');
+b.className = 'rating-btn'; b.textContent = icon; b.dataset.val = i+1;
+b.onclick = () => {
+if (!external) state[key] = i+1;
+c.querySelectorAll('.rating-btn').forEach(x => x.classList.remove('active-stress','active-mood'));
+c.querySelectorAll('.rating-btn').forEach(x => x.classList.toggle('active-stress', parseInt(x.dataset.val) <= i+1 && key==='stress'));
+c.querySelectorAll('.rating-btn').forEach(x => x.classList.toggle('active-mood', parseInt(x.dataset.val) <= i+1 && key!=='stress'));
+};
+c.appendChild(b);
+});
 }
-
 function initRelief() {
-  const items = [
-    'Pièce sombre et calme', 'Compresse froide sur la nuque/le front', 'S\'hydrater (petites gorgées)',
-    'Prendre le médicament maintenant', 'S\'allonger — pas d\'écrans', 'Huile de menthe sur les tempes',
-    'Masque pour les yeux', 'Casque anti-bruit',
-  ];
-  const c = document.getElementById('reliefList');
-  items.forEach(item => {
-    const d = document.createElement('div');
-    d.className = 'relief-item';
-    d.innerHTML = `<div class="relief-check"></div><div class="relief-text">${item}</div>`;
-    d.onclick = () => { d.classList.toggle('done'); if (d.classList.contains('done')) d.querySelector('.relief-check').textContent = '✓'; else d.querySelector('.relief-check').textContent = ''; };
-    c.appendChild(d);
-  });
+const items = [
+'Pièce sombre et calme', 'Compresse froide sur la nuque/le front', 'S\'hydrater (petites gorgées)',
+'Prendre le médicament maintenant', 'S\'allonger — pas d\'écrans', 'Huile de menthe sur les tempes',
+'Masque pour les yeux', 'Casque anti-bruit',
+];
+const c = document.getElementById('reliefList');
+items.forEach(item => {
+const d = document.createElement('div');
+d.className = 'relief-item';
+d.innerHTML = `<div class="relief-check"></div><div class="relief-text">${item}</div>`;
+d.onclick = () => { d.classList.toggle('done'); if (d.classList.contains('done')) d.querySelector('.relief-check').textContent = '✓'; else d.querySelector('.relief-check').textContent = ''; };
+c.appendChild(d);
+});
 }
-
 function updateStatus() {
-  const dot = document.getElementById('todayDot');
-  const txt = document.getElementById('todayStatusTxt');
-  if (state.migraine === true) {
-    dot.style.background = 'var(--rose)'; txt.textContent = 'Migraine';
-  } else if (state.migraine === false) {
-    dot.style.background = 'var(--teal)'; txt.textContent = 'Sans migraine';
-  } else {
-    dot.style.background = 'var(--text3)'; txt.textContent = 'Non noté';
-  }
+const dot = document.getElementById('todayDot');
+const txt = document.getElementById('todayStatusTxt');
+if (state.migraine === true) {
+dot.style.background = 'var(--rose)'; txt.textContent = 'Migraine';
+} else if (state.migraine === false) {
+dot.style.background = 'var(--teal)'; txt.textContent = 'Sans migraine';
+} else {
+dot.style.background = 'var(--text3)'; txt.textContent = 'Non noté';
 }
-
+}
 function saveToday() {
-  const entry = {
-    date: todayKey(),
-    migraine: state.migraine,
-    severity: state.severity,
-    side: state.side,
-    relief: state.relief,
-    duration: parseFloat(document.getElementById('duration').value)||0,
-    meds: document.getElementById('meds').value,
-    triggers: [...state.triggers],
-    sleep: parseFloat(document.getElementById('sleep').value)||0,
-    water: state.water,
-    stress: state.stress,
-    mood: state.mood,
-    notes: document.getElementById('notes').value,
-    ts: Date.now(),
-  };
-  DB.set('day_'+todayKey(), entry);
-  // Also keep index
-  const idx = DB.get('days_idx', []);
-  if (!idx.includes(todayKey())) idx.push(todayKey());
-  DB.set('days_idx', idx);
-  showToast('✅ Enregistré');
-  updateStatus();
-  initHistory();
-  initStats();
+const entry = {
+date: todayKey(),
+migraine: state.migraine,
+severity: state.severity,
+side: state.side,
+relief: state.relief,
+duration: parseFloat(document.getElementById('duration').value)||0,
+meds: document.getElementById('meds').value,
+triggers: [...state.triggers],
+sleep: parseFloat(document.getElementById('sleep').value)||0,
+water: state.water,
+stress: state.stress,
+mood: state.mood,
+notes: document.getElementById('notes').value,
+ts: Date.now(),
+};
+DB.set('day_'+todayKey(), entry);
+const idx = DB.get('days_idx', []);
+if (!idx.includes(todayKey())) idx.push(todayKey());
+DB.set('days_idx', idx);
+showToast('✅ Enregistré');
+updateStatus();
+initHistory();
+initStats();
 }
-
 function loadFromSaved(saved) {
-  state = { ...state, ...saved };
-  if (saved.migraine !== null) setMigraine(saved.migraine);
-  if (saved.severity) { document.getElementById('sevSlider').value = saved.severity; updateSeverity(saved.severity); }
-  if (saved.side) setSide(saved.side);
-  if (saved.relief !== null) setRelief(saved.relief);
-  document.getElementById('duration').value = saved.duration || '';
-  document.getElementById('meds').value = saved.meds || '';
-  document.getElementById('sleep').value = saved.sleep || '';
-  state.water = saved.water || 0; updateWater();
-  document.getElementById('notes').value = saved.notes || '';
-  // Triggers
-  state.triggers = saved.triggers || [];
-  document.querySelectorAll('.trigger-chip').forEach(c => {
-    c.classList.toggle('active', state.triggers.includes(c.textContent.trim()));
-  });
-  // Stress/mood restore
-  state.stress = saved.stress || 0;
-  state.mood = saved.mood || 0;
-  if (state.stress) {
-    const btns = document.querySelectorAll('#stressRow .rating-btn');
-    btns.forEach(b => b.classList.toggle('active-stress', parseInt(b.dataset.val) <= state.stress));
-  }
-  if (state.mood) {
-    const btns = document.querySelectorAll('#moodRow .rating-btn');
-    btns.forEach(b => b.classList.toggle('active-mood', parseInt(b.dataset.val) <= state.mood));
-  }
+state = { ...state, ...saved };
+if (saved.migraine !== null) setMigraine(saved.migraine);
+if (saved.severity) { document.getElementById('sevSlider').value = saved.severity; updateSeverity(saved.severity); }
+if (saved.side) setSide(saved.side);
+if (saved.relief !== null) setRelief(saved.relief);
+document.getElementById('duration').value = saved.duration || '';
+document.getElementById('meds').value = saved.meds || '';
+document.getElementById('sleep').value = saved.sleep || '';
+state.water = saved.water || 0; updateWater();
+document.getElementById('notes').value = saved.notes || '';
+state.triggers = saved.triggers || [];
+document.querySelectorAll('.trigger-chip').forEach(c => {
+c.classList.toggle('active', state.triggers.includes(c.textContent.trim()));
+});
+state.stress = saved.stress || 0;
+state.mood = saved.mood || 0;
+if (state.stress) {
+const btns = document.querySelectorAll('#stressRow .rating-btn');
+btns.forEach(b => b.classList.toggle('active-stress', parseInt(b.dataset.val) <= state.stress));
 }
-
-// ============ HISTORY ============
+if (state.mood) {
+const btns = document.querySelectorAll('#moodRow .rating-btn');
+btns.forEach(b => b.classList.toggle('active-mood', parseInt(b.dataset.val) <= state.mood));
+}
+}
 function initHistory() {
-  const c = document.getElementById('historyList');
-  const idx = DB.get('days_idx', []).sort().reverse().slice(0,30);
-  if (!idx.length) {
-    c.innerHTML = '<div class="empty-state"><div class="es-icon">📖</div><h3>Aucune entrée</h3><p>Commencez à noter vos journées pour voir l\'historique</p></div>';
-    return;
-  }
-  c.innerHTML = idx.map(k => {
-    const e = DB.get('day_'+k);
-    if (!e) return '';
-    const d = new Date(k+'T12:00:00');
-    const days = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
-    const months = ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
-    const dateStr = `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]}`;
-    const sev = e.migraine ? e.severity : 0;
-    const color = sevColors[sev];
-    const tag = e.migraine ? `<span class="history-tag migraine">⚡ Migraine ${sev ? '('+sev+'/10)' : ''}</span>` : '<span class="history-tag free">✅ Sans migraine</span>';
-    const triggerTags = (e.triggers||[]).map(t => `<span class="history-tag">${t}</span>`).join('');
-    return `<div class="history-item">
-      <div class="history-sev" style="background:${color}22;color:${color}">${e.migraine ? sev : '✓'}</div>
-      <div class="history-info">
-        <div class="history-date">${dateStr}</div>
-        <div class="history-meta">💤 ${e.sleep||'?'}h &nbsp;·&nbsp; 💧 ${e.water||0}/8 &nbsp;·&nbsp; ${e.migraine && e.duration ? e.duration+'h durée' : ''}</div>
-        <div class="history-tags">${tag}${triggerTags}</div>
-      </div>
-    </div>`;
-  }).join('');
+const c = document.getElementById('historyList');
+const idx = DB.get('days_idx', []).sort().reverse().slice(0,30);
+if (!idx.length) {
+c.innerHTML = '<div class="empty-state"><div class="es-icon">📖</div><h3>Aucune entrée</h3><p>Commencez à noter vos journées pour voir l\'historique</p></div>';
+return;
 }
-
-// ============ CALENDAR ============
+c.innerHTML = idx.map(k => {
+const e = DB.get('day_'+k);
+if (!e) return '';
+const d = new Date(k+'T12:00:00');
+const days = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+const months = ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+const dateStr = `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]}`;
+const sev = e.migraine ? e.severity : 0;
+const color = sevColors[sev];
+const tag = e.migraine ? `<span class="history-tag migraine">⚡ Migraine ${sev ? '('+sev+'/10)' : ''}</span>` : '<span class="history-tag free">✅ Sans migraine</span>';
+const triggerTags = (e.triggers||[]).map(t => `<span class="history-tag">${t}</span>`).join('');
+return `<div class="history-item">
+<div class="history-sev" style="background:${color}22;color:${color}">${e.migraine ? sev : '✓'}</div>
+<div class="history-info">
+<div class="history-date">${dateStr}</div>
+<div class="history-meta">💤 ${e.sleep||'?'}h &nbsp;·&nbsp; 💧 ${e.water||0}/8 &nbsp;·&nbsp; ${e.migraine && e.duration ? e.duration+'h durée' : ''}</div>
+<div class="history-tags">${tag}${triggerTags}</div>
+</div>
+</div>`;
+}).join('');
+}
 let calDate = new Date();
 function initCalendar() {
-  const months = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-  document.getElementById('calMonthTitle').textContent = months[calDate.getMonth()] + ' ' + calDate.getFullYear();
-  const headers = document.getElementById('calHeaders');
-  headers.innerHTML = ['L','M','M','J','V','S','D'].map(d => `<div class="cal-header">${d}</div>`).join('');
-  renderCalendar();
+const months = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+document.getElementById('calMonthTitle').textContent = months[calDate.getMonth()] + ' ' + calDate.getFullYear();
+const headers = document.getElementById('calHeaders');
+headers.innerHTML = ['L','M','M','J','V','S','D'].map(d => `<div class="cal-header">${d}</div>`).join('');
+renderCalendar();
 }
-
 function renderCalendar() {
-  const grid = document.getElementById('calGrid');
-  const y = calDate.getFullYear(), m = calDate.getMonth();
-  const first = new Date(y,m,1).getDay(); // 0=Sun
-  const firstMon = first === 0 ? 6 : first-1; // shift to Mon-start
-  const days = new Date(y,m+1,0).getDate();
-  let html = '';
-  for (let i=0;i<firstMon;i++) html += '<div class="cal-day empty"></div>';
-  for (let d=1;d<=days;d++) {
-    const k = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const e = DB.get('day_'+k);
-    const today = k === todayKey();
-    const dot = today ? ' style="border-color:var(--accent)"' : '';
-    if (e) {
-      const color = e.migraine ? sevColors[e.severity||0] : sevColors[0];
-      html += `<div class="cal-day has-data" style="background:${color}28;border-color:${color}60;color:${color}"${today?' class="cal-day today"':''}>${d}</div>`;
-    } else {
-      html += `<div class="cal-day${today?' today':''}">${d}</div>`;
-    }
-  }
-  grid.innerHTML = html;
-
-  // Month stats
-  let migDays=0, freeDays=0, totalSev=0, count=0;
-  for(let d=1;d<=days;d++) {
-    const k = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const e = DB.get('day_'+k);
-    if(e) {
-      if(e.migraine) { migDays++; totalSev+=e.severity||0; count++; }
-      else freeDays++;
-    }
-  }
-  document.getElementById('calMonthStats').innerHTML = `
-    <div class="stat-card"><div class="stat-val" style="color:var(--rose)">${migDays}</div><div class="stat-lbl">Jours de migraine</div></div>
-    <div class="stat-card"><div class="stat-val" style="color:var(--teal)">${freeDays}</div><div class="stat-lbl">Sans migraine</div></div>`;
+const grid = document.getElementById('calGrid');
+const y = calDate.getFullYear(), m = calDate.getMonth();
+const first = new Date(y,m,1).getDay();
+const firstMon = first === 0 ? 6 : first-1;
+const days = new Date(y,m+1,0).getDate();
+let html = '';
+for (let i=0;i<firstMon;i++) html += '<div class="cal-day empty"></div>';
+for (let d=1;d<=days;d++) {
+const k = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+const e = DB.get('day_'+k);
+const today = k === todayKey();
+const dot = today ? ' style="border-color:var(--accent)"' : '';
+if (e) {
+const color = e.migraine ? sevColors[e.severity||0] : sevColors[0];
+html += `<div class="cal-day has-data" style="background:${color}28;border-color:${color}60;color:${color}"${today?' class="cal-day today"':''}>${d}</div>`;
+} else {
+html += `<div class="cal-day${today?' today':''}">${d}</div>`;
 }
-
+}
+grid.innerHTML = html;
+let migDays=0, freeDays=0, totalSev=0, count=0;
+for(let d=1;d<=days;d++) {
+const k = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+const e = DB.get('day_'+k);
+if(e) {
+if(e.migraine) { migDays++; totalSev+=e.severity||0; count++; }
+else freeDays++;
+}
+}
+document.getElementById('calMonthStats').innerHTML = `
+<div class="stat-card"><div class="stat-val" style="color:var(--rose)">${migDays}</div><div class="stat-lbl">Jours de migraine</div></div>
+<div class="stat-card"><div class="stat-val" style="color:var(--teal)">${freeDays}</div><div class="stat-lbl">Sans migraine</div></div>`;
+}
 function changeMonth(dir) {
-  calDate.setMonth(calDate.getMonth()+dir);
-  const months = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-  document.getElementById('calMonthTitle').textContent = months[calDate.getMonth()] + ' ' + calDate.getFullYear();
-  renderCalendar();
+calDate.setMonth(calDate.getMonth()+dir);
+const months = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+document.getElementById('calMonthTitle').textContent = months[calDate.getMonth()] + ' ' + calDate.getFullYear();
+renderCalendar();
 }
-
-// ============ STATS ============
 function initStats() {
-  const idx = DB.get('days_idx',[]);
-  const entries = idx.map(k => DB.get('day_'+k)).filter(Boolean);
-  const migEntries = entries.filter(e => e.migraine);
-
-  const totalMig = migEntries.length;
-  const totalFree = entries.filter(e => !e.migraine).length;
-  const avgSev = migEntries.length ? (migEntries.reduce((s,e) => s+(e.severity||0),0)/migEntries.length).toFixed(1) : '–';
-  const avgSleep = entries.length ? (entries.reduce((s,e) => s+(e.sleep||0),0)/entries.length).toFixed(1) : '–';
-
-  document.getElementById('statsGrid').innerHTML = `
-    <div class="stat-card"><div class="stat-val" style="color:var(--rose)">${totalMig}</div><div class="stat-lbl">Jours de migraine</div></div>
-    <div class="stat-card"><div class="stat-val" style="color:var(--teal)">${totalFree}</div><div class="stat-lbl">Jours sans migraine</div></div>
-    <div class="stat-card"><div class="stat-val" style="color:var(--accent)">${avgSev}</div><div class="stat-lbl">Sévérité moy.</div></div>
-    <div class="stat-card"><div class="stat-val" style="color:var(--gold)">${avgSleep}h</div><div class="stat-lbl">Sommeil moy.</div></div>`;
-
-  // 12-week chart
-  buildFreqChart(idx, entries);
-
-  // Top triggers
-  const trigCount = {};
-  migEntries.forEach(e => (e.triggers||[]).forEach(t => { trigCount[t]=(trigCount[t]||0)+1; }));
-  const sorted = Object.entries(trigCount).sort((a,b)=>b[1]-a[1]).slice(0,6);
-  document.getElementById('triggerStats').innerHTML = sorted.map(([t,c]) => `
-    <div class="doctor-stat-row">
-      <span class="doctor-stat-lbl">${t}</span>
-      <span class="doctor-stat-val" style="color:var(--rose)">${c} fois</span>
-    </div>`).join('') || '<div class="empty-state" style="padding:20px"><p>Pas encore de données sur les déclencheurs</p></div>';
-
-  // Day of week
-  buildDowChart(migEntries);
+const idx = DB.get('days_idx',[]);
+const entries = idx.map(k => DB.get('day_'+k)).filter(Boolean);
+const migEntries = entries.filter(e => e.migraine);
+const totalMig = migEntries.length;
+const totalFree = entries.filter(e => !e.migraine).length;
+const avgSev = migEntries.length ? (migEntries.reduce((s,e) => s+(e.severity||0),0)/migEntries.length).toFixed(1) : '–';
+const avgSleep = entries.length ? (entries.reduce((s,e) => s+(e.sleep||0),0)/entries.length).toFixed(1) : '–';
+document.getElementById('statsGrid').innerHTML = `
+<div class="stat-card"><div class="stat-val" style="color:var(--rose)">${totalMig}</div><div class="stat-lbl">Jours de migraine</div></div>
+<div class="stat-card"><div class="stat-val" style="color:var(--teal)">${totalFree}</div><div class="stat-lbl">Jours sans migraine</div></div>
+<div class="stat-card"><div class="stat-val" style="color:var(--accent)">${avgSev}</div><div class="stat-lbl">Sévérité moy.</div></div>
+<div class="stat-card"><div class="stat-val" style="color:var(--gold)">${avgSleep}h</div><div class="stat-lbl">Sommeil moy.</div></div>`;
+buildFreqChart(idx, entries);
+const trigCount = {};
+migEntries.forEach(e => (e.triggers||[]).forEach(t => { trigCount[t]=(trigCount[t]||0)+1; }));
+const sorted = Object.entries(trigCount).sort((a,b)=>b[1]-a[1]).slice(0,6);
+document.getElementById('triggerStats').innerHTML = sorted.map(([t,c]) => `
+<div class="doctor-stat-row">
+<span class="doctor-stat-lbl">${t}</span>
+<span class="doctor-stat-val" style="color:var(--rose)">${c} fois</span>
+</div>`).join('') || '<div class="empty-state" style="padding:20px"><p>Pas encore de données sur les déclencheurs</p></div>';
+buildDowChart(migEntries);
 }
-
 function buildFreqChart(idx, entries) {
-  const c = document.getElementById('freqChart');
-  // Get last 12 weeks
-  const weeks = [];
-  const now = new Date();
-  for (let w=11;w>=0;w--) {
-    const wStart = new Date(now); wStart.setDate(now.getDate() - now.getDay() - w*7 + 1);
-    let count = 0;
-    for (let d=0;d<7;d++) {
-      const dd = new Date(wStart); dd.setDate(wStart.getDate()+d);
-      const k = `${dd.getFullYear()}-${String(dd.getMonth()+1).padStart(2,'0')}-${String(dd.getDate()).padStart(2,'0')}`;
-      const e = DB.get('day_'+k);
-      if (e && e.migraine) count++;
-    }
-    weeks.push(count);
-  }
-  const max = Math.max(...weeks,1);
-  c.innerHTML = weeks.map(w => `
-    <div class="chart-bar-wrap">
-      <div class="chart-bar" style="height:${(w/max)*90}px;background:${w>4?'var(--rose)':w>2?'var(--gold)':'var(--teal)'}"></div>
-    </div>`).join('');
+const c = document.getElementById('freqChart');
+const weeks = [];
+const now = new Date();
+for (let w=11;w>=0;w--) {
+const wStart = new Date(now); wStart.setDate(now.getDate() - now.getDay() - w*7 + 1);
+let count = 0;
+for (let d=0;d<7;d++) {
+const dd = new Date(wStart); dd.setDate(wStart.getDate()+d);
+const k = `${dd.getFullYear()}-${String(dd.getMonth()+1).padStart(2,'0')}-${String(dd.getDate()).padStart(2,'0')}`;
+const e = DB.get('day_'+k);
+if (e && e.migraine) count++;
 }
-
+weeks.push(count);
+}
+const max = Math.max(...weeks,1);
+c.innerHTML = weeks.map(w => `
+<div class="chart-bar-wrap">
+<div class="chart-bar" style="height:${(w/max)*90}px;background:${w>4?'var(--rose)':w>2?'var(--gold)':'var(--teal)'}"></div>
+</div>`).join('');
+}
 function buildDowChart(migEntries) {
-  const c = document.getElementById('dowChart');
-  const dowSum = Array(7).fill(0); const dowCount = Array(7).fill(0);
-  migEntries.forEach(e => {
-    const d = new Date(e.date+'T12:00:00');
-    const dow = (d.getDay()+6)%7; // Mon=0
-    dowSum[dow] += (e.severity||0); dowCount[dow]++;
-  });
-  const avgs = dowSum.map((s,i) => dowCount[i] ? s/dowCount[i] : 0);
-  const max = Math.max(...avgs,1);
-  c.innerHTML = avgs.map(a => `
-    <div class="chart-bar-wrap">
-      <div class="chart-bar" style="height:${(a/max)*90}px;background:var(--rose)"></div>
-    </div>`).join('');
+const c = document.getElementById('dowChart');
+const dowSum = Array(7).fill(0); const dowCount = Array(7).fill(0);
+migEntries.forEach(e => {
+const d = new Date(e.date+'T12:00:00');
+const dow = (d.getDay()+6)%7;
+dowSum[dow] += (e.severity||0); dowCount[dow]++;
+});
+const avgs = dowSum.map((s,i) => dowCount[i] ? s/dowCount[i] : 0);
+const max = Math.max(...avgs,1);
+c.innerHTML = avgs.map(a => `
+<div class="chart-bar-wrap">
+<div class="chart-bar" style="height:${(a/max)*90}px;background:var(--rose)"></div>
+</div>`).join('');
 }
-
-// ============ MEDS ============
 function initMeds() {
-  const meds = DB.get('meds',[]);
-  const c = document.getElementById('medsList');
-  if (!meds.length) {
-    c.innerHTML = '<div class="empty-state"><div class="es-icon">💊</div><h3>Aucun médicament suivi</h3><p>Ajoutez vos médicaments préventifs et de crise</p></div>';
-    return;
-  }
-  c.innerHTML = meds.map((m,i) => `
-    <div class="med-card">
-      <div class="med-header">
-        <div class="med-name">${m.name||'Médicament '+(i+1)}</div>
-        <div class="med-type-badge ${m.type||'acute'}">${m.type||'aigu'}</div>
-      </div>
-      <div class="med-fields">
-        <div><div class="field-label">Dose</div><div style="font-size:13px;color:var(--text2);margin-top:3px">${m.dose||'–'}</div></div>
-        <div><div class="field-label">Fréquence</div><div style="font-size:13px;color:var(--text2);margin-top:3px">${m.frequency||'–'}</div></div>
-        <div><div class="field-label">Depuis</div><div style="font-size:13px;color:var(--text2);margin-top:3px">${m.start||'–'}</div></div>
-        <div><div class="field-label">Prescrit par</div><div style="font-size:13px;color:var(--text2);margin-top:3px">${m.doctor||'–'}</div></div>
-      </div>
-      <button class="btn-secondary" onclick="removeMed(${i})" style="margin-top:10px;font-size:11px;color:var(--rose);border-color:var(--rose-soft)">Supprimer</button>
-    </div>`).join('');
+const meds = DB.get('meds',[]);
+const c = document.getElementById('medsList');
+if (!meds.length) {
+c.innerHTML = '<div class="empty-state"><div class="es-icon">💊</div><h3>Aucun médicament suivi</h3><p>Ajoutez vos médicaments préventifs et de crise</p></div>';
+return;
 }
-
+c.innerHTML = meds.map((m,i) => `
+<div class="med-card">
+<div class="med-header">
+<div class="med-name">${m.name||'Médicament '+(i+1)}</div>
+<div class="med-type-badge ${m.type||'acute'}">${m.type||'aigu'}</div>
+</div>
+<div class="med-fields">
+<div><div class="field-label">Dose</div><div style="font-size:13px;color:var(--text2);margin-top:3px">${m.dose||'–'}</div></div>
+<div><div class="field-label">Fréquence</div><div style="font-size:13px;color:var(--text2);margin-top:3px">${m.frequency||'–'}</div></div>
+<div><div class="field-label">Depuis</div><div style="font-size:13px;color:var(--text2);margin-top:3px">${m.start||'–'}</div></div>
+<div><div class="field-label">Prescrit par</div><div style="font-size:13px;color:var(--text2);margin-top:3px">${m.doctor||'–'}</div></div>
+</div>
+<button class="btn-secondary" onclick="removeMed(${i})" style="margin-top:10px;font-size:11px;color:var(--rose);border-color:var(--rose-soft)">Supprimer</button>
+</div>`).join('');
+}
 function addMed() {
-  const name = prompt('Nom du médicament :'); if (!name) return;
-  const type = prompt('Type (préventif / aigu / secours) :', 'aigu') || 'aigu';
-  const dose = prompt('Dose :', '') || '';
-  const freq = prompt('Fréquence :', 'Si nécessaire') || '';
-  const doc = prompt('Prescrit par :', '') || '';
-  const start = prompt('Date de début :', '') || '';
-  const meds = DB.get('meds',[]);
-  meds.push({ name, type, dose, frequency: freq, doctor: doc, start });
-  DB.set('meds', meds);
-  initMeds();
+const name = prompt('Nom du médicament :'); if (!name) return;
+const type = prompt('Type (préventif / aigu / secours) :', 'aigu') || 'aigu';
+const dose = prompt('Dose :', '') || '';
+const freq = prompt('Fréquence :', 'Si nécessaire') || '';
+const doc = prompt('Prescrit par :', '') || '';
+const start = prompt('Date de début :', '') || '';
+const meds = DB.get('meds',[]);
+meds.push({ name, type, dose, frequency: freq, doctor: doc, start });
+DB.set('meds', meds);
+initMeds();
 }
-
 function removeMed(i) {
-  if (!confirm('Supprimer ce médicament ?')) return;
-  const meds = DB.get('meds',[]);
-  meds.splice(i,1); DB.set('meds',meds); initMeds();
+if (!confirm('Supprimer ce médicament ?')) return;
+const meds = DB.get('meds',[]);
+meds.splice(i,1); DB.set('meds',meds); initMeds();
 }
-
-// ============ DOCTOR ============
 function initDoctorPage() {
-  const idx = DB.get('days_idx',[]);
-  const entries = idx.map(k => DB.get('day_'+k)).filter(Boolean);
-  const migEntries = entries.filter(e => e.migraine);
-  const lastVisit = DB.get('last_visit', null);
-
-  // Stats since last visit
-  const since = lastVisit ? entries.filter(e => e.date >= lastVisit.date) : entries;
-  const sinceMig = since.filter(e => e.migraine);
-  const avgSev = sinceMig.length ? (sinceMig.reduce((s,e)=>s+(e.severity||0),0)/sinceMig.length).toFixed(1) : '–';
-  const trigCount = {};
-  sinceMig.forEach(e => (e.triggers||[]).forEach(t => { trigCount[t]=(trigCount[t]||0)+1; }));
-  const topTrig = Object.entries(trigCount).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([t])=>t).join(', ');
-
-  document.getElementById('doctorStats').innerHTML = `
-    <div class="doctor-stat-row"><span class="doctor-stat-lbl">Période couverte</span><span class="doctor-stat-val">${since.length} jours enregistrés</span></div>
-    <div class="doctor-stat-row"><span class="doctor-stat-lbl">Jours de migraine</span><span class="doctor-stat-val" style="color:var(--rose)">${sinceMig.length}</span></div>
-    <div class="doctor-stat-row"><span class="doctor-stat-lbl">Jours sans migraine</span><span class="doctor-stat-val" style="color:var(--teal)">${since.filter(e=>!e.migraine).length}</span></div>
-    <div class="doctor-stat-row"><span class="doctor-stat-lbl">Sévérité moyenne</span><span class="doctor-stat-val">${avgSev}/10</span></div>
-    <div class="doctor-stat-row"><span class="doctor-stat-lbl">Principaux déclencheurs</span><span class="doctor-stat-val">${topTrig||'Pas assez de données'}</span></div>`;
-
-  // Questions
-  const qs = DB.get('doc_questions', [
-    'Devrais-je essayer un autre médicament ?',
-    'Y a-t-il de nouveaux traitements disponibles ?',
-    'Quels changements de mode de vie aideraient le plus ?',
-  ]);
-  renderDocQuestions(qs);
+const idx = DB.get('days_idx',[]);
+const entries = idx.map(k => DB.get('day_'+k)).filter(Boolean);
+const migEntries = entries.filter(e => e.migraine);
+const lastVisit = DB.get('last_visit', null);
+const since = lastVisit ? entries.filter(e => e.date >= lastVisit.date) : entries;
+const sinceMig = since.filter(e => e.migraine);
+const avgSev = sinceMig.length ? (sinceMig.reduce((s,e)=>s+(e.severity||0),0)/sinceMig.length).toFixed(1) : '–';
+const trigCount = {};
+sinceMig.forEach(e => (e.triggers||[]).forEach(t => { trigCount[t]=(trigCount[t]||0)+1; }));
+const topTrig = Object.entries(trigCount).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([t])=>t).join(', ');
+document.getElementById('doctorStats').innerHTML = `
+<div class="doctor-stat-row"><span class="doctor-stat-lbl">Période couverte</span><span class="doctor-stat-val">${since.length} jours enregistrés</span></div>
+<div class="doctor-stat-row"><span class="doctor-stat-lbl">Jours de migraine</span><span class="doctor-stat-val" style="color:var(--rose)">${sinceMig.length}</span></div>
+<div class="doctor-stat-row"><span class="doctor-stat-lbl">Jours sans migraine</span><span class="doctor-stat-val" style="color:var(--teal)">${since.filter(e=>!e.migraine).length}</span></div>
+<div class="doctor-stat-row"><span class="doctor-stat-lbl">Sévérité moyenne</span><span class="doctor-stat-val">${avgSev}/10</span></div>
+<div class="doctor-stat-row"><span class="doctor-stat-lbl">Principaux déclencheurs</span><span class="doctor-stat-val">${topTrig||'Pas assez de données'}</span></div>`;
+const qs = DB.get('doc_questions', [
+'Devrais-je essayer un autre médicament ?',
+'Y a-t-il de nouveaux traitements disponibles ?',
+'Quels changements de mode de vie aideraient le plus ?',
+]);
+renderDocQuestions(qs);
 }
-
 function renderDocQuestions(qs) {
-  const c = document.getElementById('docQuestions');
-  c.innerHTML = qs.map((q,i) => `
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-      <div style="width:20px;height:20px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${i+1}</div>
-      <input type="text" class="field-input" value="${q}" onchange="updateDocQ(${i},this.value)" style="flex:1">
-    </div>`).join('');
+const c = document.getElementById('docQuestions');
+c.innerHTML = qs.map((q,i) => `
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+<div style="width:20px;height:20px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${i+1}</div>
+<input type="text" class="field-input" value="${q}" onchange="updateDocQ(${i},this.value)" style="flex:1">
+</div>`).join('');
 }
-
 function updateDocQ(i,v) {
-  const qs = DB.get('doc_questions',[]);
-  qs[i]=v; DB.set('doc_questions',qs);
+const qs = DB.get('doc_questions',[]);
+qs[i]=v; DB.set('doc_questions',qs);
 }
-
 function addDocQuestion() {
-  const qs = DB.get('doc_questions',[]);
-  qs.push(''); DB.set('doc_questions',qs); renderDocQuestions(qs);
+const qs = DB.get('doc_questions',[]);
+qs.push(''); DB.set('doc_questions',qs); renderDocQuestions(qs);
 }
-
 function saveVisit() {
-  const v = { date: document.getElementById('visitDate').value, doctor: document.getElementById('visitDoc').value, notes: document.getElementById('visitNotes').value };
-  DB.set('last_visit', v);
-  const visits = DB.get('visits',[]);
-  visits.push(v); DB.set('visits', visits);
-  showToast('Visite enregistrée');
+const v = { date: document.getElementById('visitDate').value, doctor: document.getElementById('visitDoc').value, notes: document.getElementById('visitNotes').value };
+DB.set('last_visit', v);
+const visits = DB.get('visits',[]);
+visits.push(v); DB.set('visits', visits);
+showToast('Visite enregistrée');
 }
-
 function printDoctorSummary() {
-  window.print();
+window.print();
 }
-
-// ============ WELLNESS ============
 function initMealPlan() {
-  const days = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
-  const meals = ['Petit-déj','Déjeuner','Dîner','Collations'];
-  const c = document.getElementById('mealPlan');
-  c.innerHTML = days.map(d => `
-    <div style="margin-bottom:10px">
-      <div class="field-label" style="margin-bottom:6px">${d}</div>
-      <div class="field-row">
-        ${meals.map(m => `<div class="field-group"><div style="font-size:9px;color:var(--text3);margin-bottom:3px">${m}</div><input type="text" class="field-input" style="padding:7px 8px;font-size:12px" placeholder="…"></div>`).join('')}
-      </div>
-    </div>`).join('');
-
-  // Exercise intensity
-  buildRating('exIntensity', ['💤','🚶','🏃','⚡','🔥'], 'ex', true);
+const days = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+const meals = ['Petit-déj','Déjeuner','Dîner','Collations'];
+const c = document.getElementById('mealPlan');
+c.innerHTML = days.map(d => `
+<div style="margin-bottom:10px">
+<div class="field-label" style="margin-bottom:6px">${d}</div>
+<div class="field-row">
+${meals.map(m => `<div class="field-group"><div style="font-size:9px;color:var(--text3);margin-bottom:3px">${m}</div><input type="text" class="field-input" style="padding:7px 8px;font-size:12px" placeholder="…"></div>`).join('')}
+</div>
+</div>`).join('');
+buildRating('exIntensity', ['💤','🚶','🏃','⚡','🔥'], 'ex', true);
 }
-
 function saveGratitude() {
-  const entry = { date: todayKey(), g1: document.getElementById('grat1').value, g2: document.getElementById('grat2').value };
-  const gs = DB.get('gratitude',[]);
-  gs.unshift(entry); if (gs.length>90) gs.length=90;
-  DB.set('gratitude',gs);
-  showToast('Gratitude enregistrée ✨');
+const entry = { date: todayKey(), g1: document.getElementById('grat1').value, g2: document.getElementById('grat2').value };
+const gs = DB.get('gratitude',[]);
+gs.unshift(entry); if (gs.length>90) gs.length=90;
+DB.set('gratitude',gs);
+showToast('Gratitude enregistrée ✨');
 }
-
 function saveExercise() {
-  const entry = { date: todayKey(), activity: document.getElementById('exercise').value, duration: document.getElementById('exDuration').value };
-  const exs = DB.get('exercise',[]);
-  exs.unshift(entry); if (exs.length>90) exs.length=90;
-  DB.set('exercise',exs);
-  showToast('Exercice enregistré 💪');
+const entry = { date: todayKey(), activity: document.getElementById('exercise').value, duration: document.getElementById('exDuration').value };
+const exs = DB.get('exercise',[]);
+exs.unshift(entry); if (exs.length>90) exs.length=90;
+DB.set('exercise',exs);
+showToast('Exercice enregistré 💪');
 }
-
-// ============ NAVIGATION ============
 let currentTab = 'today';
 function switchTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('sec-'+tab).classList.add('active');
-  document.querySelector(`.tab[data-tab="${tab}"]`)?.classList.add('active');
-  document.getElementById('bnav-'+tab)?.classList.add('active');
-  window.scrollTo(0,0);
-  if (tab==='history') initHistory();
-  if (tab==='stats') initStats();
-  if (tab==='doctor') initDoctorPage();
+currentTab = tab;
+document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
+document.getElementById('sec-'+tab).classList.add('active');
+document.querySelector(`.tab[data-tab="${tab}"]`)?.classList.add('active');
+document.getElementById('bnav-'+tab)?.classList.add('active');
+window.scrollTo(0,0);
+if (tab==='history') initHistory();
+if (tab==='stats') initStats();
+if (tab==='doctor') initDoctorPage();
 }
-
 document.querySelectorAll('.tab').forEach(t => {
-  t.addEventListener('click', () => switchTab(t.dataset.tab));
+t.addEventListener('click', () => switchTab(t.dataset.tab));
 });
-
-// ============ BRIGHTNESS TOGGLE ============
 let dimMode = false;
 document.getElementById('brightnessToggle').onclick = () => {
-  dimMode = !dimMode;
-  document.documentElement.style.filter = dimMode ? 'brightness(.5)' : '';
-  document.getElementById('brightnessToggle').textContent = dimMode ? '☀️' : '🌙';
+dimMode = !dimMode;
+document.documentElement.style.filter = dimMode ? 'brightness(.5)' : '';
+document.getElementById('brightnessToggle').textContent = dimMode ? '☀️' : '🌙';
 };
-
-// ============ TOAST ============
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
+const t = document.getElementById('toast');
+t.textContent = msg; t.classList.add('show');
+setTimeout(() => t.classList.remove('show'), 2000);
 }
-
-// Init history & stats on load
 initHistory();
-
-// ============ DATA EXPORT/IMPORT ============
 function toggleDataMenu() {
-  const m = document.getElementById('dataMenu');
-  m.style.display = m.style.display === 'none' ? 'block' : 'none';
+const m = document.getElementById('dataMenu');
+m.style.display = m.style.display === 'none' ? 'block' : 'none';
 }
-
-function exportData() {
-  const data = {};
-  for (let i = 0; i < localStorage.length; i++) {
-    const k = localStorage.key(i);
-    if (k.startsWith('mg_')) data[k] = localStorage.getItem(k);
-  }
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `migraine_sauvegarde_${todayKey()}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast('Données exportées');
-  toggleDataMenu();
-}
-
-function importData() {
-  const input = document.createElement('input');
-  input.type = 'file'; input.accept = '.json';
-  input.onchange = (e) => {
-    const file = e.target.files[0]; if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try {
-        const data = JSON.parse(ev.target.result);
-        let count = 0;
-        Object.entries(data).forEach(([k, v]) => {
-          if (k.startsWith('mg_')) { localStorage.setItem(k, v); count++; }
-        });
-        showToast(`${count} entrées importées`);
-        location.reload();
-      } catch { showToast('Fichier invalide'); }
-    };
-    reader.readAsText(file);
-  };
-  input.click();
-  toggleDataMenu();
-}
-
+function exportData(){alert("Export is available in the full version. Get it on Etsy! → etsy.com/shop/StudioBoubou");}
+function importData(){alert("Import is available in the full version. Get it on Etsy! → etsy.com/shop/StudioBoubou");}
 function clearAllData() {
-  if (!confirm('Supprimer TOUTES les données migraine ? Cette action est irréversible.')) return;
-  if (!confirm('Êtes-vous sûr(e) ? Toutes les entrées, médicaments et paramètres seront perdus.')) return;
-  const keys = [];
-  for (let i = 0; i < localStorage.length; i++) {
-    const k = localStorage.key(i);
-    if (k.startsWith('mg_')) keys.push(k);
-  }
-  keys.forEach(k => localStorage.removeItem(k));
-  showToast('Toutes les données supprimées');
-  toggleDataMenu();
-  location.reload();
+if (!confirm('Supprimer TOUTES les données migraine ? Cette action est irréversible.')) return;
+if (!confirm('Êtes-vous sûr(e) ? Toutes les entrées, médicaments et paramètres seront perdus.')) return;
+const keys = [];
+for (let i = 0; i < localStorage.length; i++) {
+const k = localStorage.key(i);
+if (k.startsWith('mg_')) keys.push(k);
 }
-
-// ============ FIX: SAVE/RESTORE MEAL PLAN ============
+keys.forEach(k => localStorage.removeItem(k));
+showToast('Toutes les données supprimées');
+toggleDataMenu();
+location.reload();
+}
 function saveMealPlan() {
-  const inputs = document.querySelectorAll('#mealPlan input');
-  const vals = Array.from(inputs).map(i => i.value);
-  DB.set('meal_plan', vals);
+const inputs = document.querySelectorAll('#mealPlan input');
+const vals = Array.from(inputs).map(i => i.value);
+DB.set('meal_plan', vals);
 }
-
 function loadMealPlan() {
-  const vals = DB.get('meal_plan', []);
-  if (!vals.length) return;
-  const inputs = document.querySelectorAll('#mealPlan input');
-  inputs.forEach((inp, i) => { if (vals[i]) inp.value = vals[i]; });
+const vals = DB.get('meal_plan', []);
+if (!vals.length) return;
+const inputs = document.querySelectorAll('#mealPlan input');
+inputs.forEach((inp, i) => { if (vals[i]) inp.value = vals[i]; });
 }
-
-// Auto-save meal plan on input
 document.addEventListener('input', (e) => {
-  if (e.target.closest('#mealPlan')) saveMealPlan();
+if (e.target.closest('#mealPlan')) saveMealPlan();
 });
-
-// Load meal plan after init
-setTimeout(loadMealPlan, 100);
-</script>
+setTimeout(loadMealPlan, 100);</script>
 
 <div id="demo-banner">
   <span>✨ FREE DEMO — DÉMO GRATUITE — Version complète : planner imprimable 102 pages + cette app</span>
@@ -1545,5 +869,15 @@ setTimeout(loadMealPlan, 100);
   <button class="close-btn" onclick="this.parentElement.remove();document.body.style.paddingBottom='0'">&times;</button>
 </div>
 
+<script>
+// Disable right-click context menu
+document.addEventListener('contextmenu',function(e){e.preventDefault();});
+// Disable Ctrl+S, Ctrl+U, Ctrl+Shift+I, F12
+document.addEventListener('keydown',function(e){
+  if(e.key==='F12')e.preventDefault();
+  if(e.ctrlKey&&(e.key==='s'||e.key==='S'||e.key==='u'||e.key==='U'))e.preventDefault();
+  if(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='i'||e.key==='J'||e.key==='j'||e.key==='C'||e.key==='c'))e.preventDefault();
+});
+</script>
 </body>
 </html>
